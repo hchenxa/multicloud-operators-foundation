@@ -23,6 +23,7 @@ IMAGE ?= multicloud-manager
 IMAGE_REGISTRY ?= quay.io/open-cluster-management
 IMAGE_TAG ?= latest
 FOUNDATION_IMAGE_NAME ?= $(IMAGE_REGISTRY)/$(IMAGE):$(IMAGE_TAG)
+E2E_IMAGE ?= multicloud-manager-e2e
 
 GIT_HOST ?= github.com/open-cluster-management
 BASE_DIR := $(shell basename $(PWD))
@@ -76,6 +77,9 @@ build-e2e:
 
 test-e2e: build-e2e deploy-hub deploy-klusterlet deploy-foundation-hub deploy-foundation-agent
 	./e2e.test -test.v -ginkgo.v
+
+build-e2e-image: build-e2e
+	$(call build-image,$(E2E_IMAGE),quay.io/hchenxa/$(E2E_IMAGE),./Dockerfile.e2e,.)
 
 ############################################################
 # This section contains the code generation stuff
